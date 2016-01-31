@@ -1,0 +1,15 @@
+#map {
+  height: 60%;
+  width:80%;
+  margin:auto;
+}
+
+#wrapper {
+  margin: auto;
+  text-align: center;
+}
+
+#title{
+	font-size: 4em;
+	margin-bottom: 0;
+}
