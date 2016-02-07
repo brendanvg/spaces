@@ -13,6 +13,10 @@ function (mapDivId, lat, lon) {
   var gmfReturn = gmf(mapDivId, lat, lon)
 
 
+  // var geojsonLayer = new L.geoJson.ajax("Census2010.geojson")
+  // geojsonLayer.addTo(map)
+
+
   function onMapClick(e) {
     var popup = L.popup()
     var latlng = e.latlng
@@ -85,6 +89,11 @@ function (mapDivId, lat, lon) {
   var mapMe=document.getElementById("mapMe")
   mapMe.addEventListener("click", gmfReturn.geoFindMe)
 
+  var mapResource= document.getElementById('mapResource')
+  var mapResource = addEventListener('click', gmfReturn.mapResource)
+
+  map.on('locationfound', gmfReturn.onLocationFound)
+  map.on('locationerror', gmfReturn.onLocationError)
 
 //--------INITIAL RENDERING OF MARKERS-------------
 //Everytime the page loads hyperquest streams in 

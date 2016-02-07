@@ -24,6 +24,93 @@ function initializeMap (mapDivId,lat,lon) {
     geoFindMe : geoFindMe,
     map : map,
 //  plotPolygon : plotPolygon
+    mapResource : mapResource,
+    onLocationFound: onLocationFound,
+    onLocationError: onLocationError,
+  }
+
+  function mapResource () {
+    map.locate({watch:true,setView:true, maxZoom:16});
+    console.log('hey')
+  }
+
+  function onLocationFound(e) {
+    var radius= e.accuracy /2;
+
+    var popup = L.popup()
+    var latlng = e.latlng
+
+    //dynamically creates the form once clicked
+    var form = document.createElement('form')
+    form.method = 'POST'
+    form.action='/submitMarker'
+
+    var inputCoords = document.createElement('input')
+    inputCoords.type = 'hidden'
+    inputCoords.name='coords'
+    inputCoords.value= [e.latlng.lat, e.latlng.lng]
+
+    var input = document.createElement('input')
+    input.name='markerLabel'
+
+    var button = document.createElement('button')
+    var t = document.createTextNode("submit")
+    button.appendChild(t)
+
+    form.appendChild(input)
+    form.appendChild(inputCoords)
+    form.appendChild(button)
+   
+
+   
+
+//Dynamically creates Label with delete option 
+// once form is submitted
+    button.addEventListener('click', function(evt){
+
+      var markerHtml = document.createElement("div")
+      
+      var h1 = document.createElement("h1")
+      var t2 = document.createTextNode(input.value)
+      h1.appendChild(t2)
+      markerHtml.appendChild(h1)
+
+      var a = document.createElement("a")
+      a.href='/delete/'+inputCoords.value
+      var delButton = document.createElement("button")
+      var t3 = document.createTextNode("delete")
+      delButton.appendChild(t3)
+      a.appendChild(delButton)
+      markerHtml.appendChild(a)
+
+
+    //Actually adds the marker to the map
+      addMarker(e.latlng.lat, e.latlng.lng, markerHtml) 
+    })
+
+  //Creates the popup (which is a form described above) 
+  //through leaflet's popup method
+    popup
+      .setLatLng(e.latlng)
+      .setContent(form)
+      .openOn(map) 
+
+
+ 
+
+  
+
+
+    // L.marker(e.latlng).addTo(map)
+    //   .bindPopup('You are within'+radius+'meters from this point').openPopup()
+
+    //   L.circle(e.latlng, radius).addTo(map)
+  }
+
+
+  function onLocationError(e){
+    console.log(e)
+    console.log('nope')
   }
 
   function addMarker (lat, lng, html) {
